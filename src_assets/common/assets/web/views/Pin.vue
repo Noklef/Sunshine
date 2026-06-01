@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
-  <%- header %>
-</head>
-
-<body id="app" v-cloak>
-  <Navbar></Navbar>
+<template>
   <div id="content" class="container">
     <h1 class="my-4 text-center">{{ $t('pin.pin_pairing') }}</h1>
     <form class="form d-flex flex-column align-items-center" id="form" @submit.prevent="registerDevice">
@@ -34,22 +26,18 @@
       <div id="status"></div>
     </form>
   </div>
-</body>
+</template>
 
-<script type="module">
-  import { createApp } from 'vue'
-  import { initApp } from './init'
-  import Navbar from './Navbar.vue'
-  import { apiFetch } from './fetch_utils'
+<script>
+  import { apiFetch } from '../fetch_utils'
   import {
     Forward,
     Hash,
     Monitor,
   } from '@lucide/vue'
 
-  let app = createApp({
+  export default {
     components: {
-      Navbar,
       Forward,
       Hash,
       Monitor,
@@ -61,7 +49,7 @@
         let name = document.querySelector("#name-input").value;
         document.querySelector("#status").innerHTML = "";
         let b = JSON.stringify({pin: pin, name: name});
-        apiFetch("./api/pin", {
+        apiFetch("/api/pin", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -84,7 +72,5 @@
           });
       }
     }
-  });
-
-  initApp(app);
+  }
 </script>

@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
-  <%- header %>
-</head>
-
-<body id="app" v-cloak>
-  <Navbar></Navbar>
+<template>
   <div class="container">
     <h1 class="my-4">{{ $t('config.configuration') }}</h1>
 
@@ -118,22 +110,19 @@
       </button>
     </div>
   </div>
-</body>
+</template>
 
-
-<script type="module">
-  import { computed, createApp } from 'vue'
-  import { initApp } from './init'
-  import Navbar from './Navbar.vue'
-  import { apiFetch } from './fetch_utils'
-  import General from './configs/tabs/General.vue'
-  import Inputs from './configs/tabs/Inputs.vue'
-  import Network from './configs/tabs/Network.vue'
-  import Files from './configs/tabs/Files.vue'
-  import Advanced from './configs/tabs/Advanced.vue'
-  import AudioVideo from './configs/tabs/AudioVideo.vue'
-  import ContainerEncoders from './configs/tabs/ContainerEncoders.vue'
-  import {$tp, usePlatformI18n} from './platform-i18n'
+<script>
+  import { computed } from 'vue'
+  import { apiFetch } from '../fetch_utils'
+  import General from '../configs/tabs/General.vue'
+  import Inputs from '../configs/tabs/Inputs.vue'
+  import Network from '../configs/tabs/Network.vue'
+  import Files from '../configs/tabs/Files.vue'
+  import Advanced from '../configs/tabs/Advanced.vue'
+  import AudioVideo from '../configs/tabs/AudioVideo.vue'
+  import ContainerEncoders from '../configs/tabs/ContainerEncoders.vue'
+  import {$tp, usePlatformI18n} from '../platform-i18n'
   import {
     Check,
     Cpu,
@@ -148,9 +137,8 @@
     Volume2,
   } from '@lucide/vue'
 
-  const app = createApp({
+  export default {
     components: {
-      Navbar,
       General,
       Inputs,
       Network,
@@ -384,7 +372,7 @@
       }
     },
     created() {
-      fetch("./api/config")
+      fetch("/api/config")
         .then((r) => r.json())
         .then((r) => {
           this.config = r;
@@ -481,7 +469,7 @@
           });
         });
 
-        return apiFetch("./api/config", {
+        return apiFetch("/api/config", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -507,7 +495,7 @@
             setTimeout(() => {
               this.saved = this.restarted = false;
             }, 5000);
-            apiFetch("./api/restart", {
+            apiFetch("/api/restart", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json"
@@ -616,7 +604,5 @@
       // Add hashchange event listener
       window.addEventListener("hashchange", handleHash);
     },
-  });
-
-  initApp(app);
+  }
 </script>

@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
-      <%- header %>
-</head>
-
-<body id="app" v-cloak>
-  <Navbar></Navbar>
+<template>
   <div class="container">
     <h1 class="my-4">{{ $t('troubleshooting.troubleshooting') }}</h1>
     <!-- ViGEmBus Installation -->
@@ -197,12 +189,10 @@
       </div>
     </div>
   </div>
+</template>
 
-  <script type="module">
-    import { createApp } from 'vue'
-    import { initApp } from './init'
-    import Navbar from './Navbar.vue'
-    import { apiFetch } from './fetch_utils'
+<script>
+    import { apiFetch } from '../fetch_utils'
     import {
       AlertCircle,
       AlertTriangle,
@@ -221,9 +211,8 @@
       XCircle,
     } from '@lucide/vue'
 
-    const app = createApp({
+    export default {
       components: {
-        Navbar,
         AlertCircle,
         AlertTriangle,
         Check,
@@ -407,12 +396,12 @@
         this.refreshLogs();
         this.refreshClients();
       },
-      beforeDestroy() {
+      beforeUnmount() {
         clearInterval(this.logInterval);
       },
       methods: {
         refreshLogs() {
-          fetch("./api/logs",)
+          fetch("/api/logs",)
             .then((r) => r.text())
             .then((r) => {
               this.logs = r;
@@ -420,7 +409,7 @@
         },
         closeApp() {
           this.closeAppPressed = true;
-          apiFetch("./api/apps/close", {
+          apiFetch("/api/apps/close", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -436,7 +425,7 @@
         },
         unpairAll() {
           this.unpairAllPressed = true;
-          apiFetch("./api/clients/unpair-all", {
+          apiFetch("/api/clients/unpair-all", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -453,7 +442,7 @@
             });
         },
         unpairSingle(uuid) {
-          apiFetch("./api/clients/unpair", {
+          apiFetch("/api/clients/unpair", {
             method: "POST",
             headers: {
               'Content-Type': 'application/json'
@@ -465,7 +454,7 @@
           });
         },
         toggleClient(uuid, enabled) {
-          fetch("./api/clients/update", {
+          fetch("/api/clients/update", {
             method: "POST",
             headers: {
               'Content-Type': 'application/json'
@@ -476,7 +465,7 @@
           });
         },
         refreshClients() {
-          fetch("./api/clients/list")
+          fetch("/api/clients/list")
             .then((response) => response.json())
             .then((response) => {
               const clientList = document.querySelector("#client-list");
@@ -514,7 +503,7 @@
           setTimeout(() => {
             this.restartPressed = false;
           }, 5000);
-          apiFetch("./api/restart", {
+          apiFetch("/api/restart", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -644,9 +633,5 @@
           }
         },
       },
-    });
-
-    initApp(app);
-  </script>
-
-</body>
+    }
+</script>

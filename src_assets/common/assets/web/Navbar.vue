@@ -2,9 +2,9 @@
   <div>
     <nav class="navbar navbar-expand-lg navbar-sunshine">
       <div class="container-fluid">
-        <a class="navbar-brand" href="./" title="Sunshine">
+        <router-link class="navbar-brand" to="/" title="Sunshine">
           <img src="/images/logo-sunshine-45.png" height="45" alt="Sunshine">
-        </a>
+        </router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -12,40 +12,40 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="./">
+              <router-link class="nav-link" to="/">
                 <Home :size="18" class="icon"></Home>
                 {{ $t('navbar.home') }}
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./pin">
+              <router-link class="nav-link" to="/pin">
                 <Lock :size="18" class="icon"></Lock>
                 {{ $t('navbar.pin') }}
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./apps">
+              <router-link class="nav-link" to="/apps">
                 <Layers :size="18" class="icon"></Layers>
                 {{ $t('navbar.applications') }}
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./featured">
+              <router-link class="nav-link" to="/featured">
                 <Star :size="18" class="icon"></Star>
                 {{ $t('navbar.featured') }}
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./config">
+              <router-link class="nav-link" to="/config">
                 <Settings :size="18" class="icon"></Settings>
                 {{ $t('navbar.configuration') }}
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./troubleshooting">
+              <router-link class="nav-link" to="/troubleshooting">
                 <Info :size="18" class="icon"></Info>
                 {{ $t('navbar.troubleshoot') }}
-              </a>
+              </router-link>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -59,10 +59,10 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserMenu">
                 <li>
-                  <a class="dropdown-item d-flex align-items-center" href="./password">
+                  <router-link class="dropdown-item d-flex align-items-center" to="/password">
                     <Shield :size="18" class="icon"></Shield>
                     {{ $t('navbar.password') }}
-                  </a>
+                  </router-link>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
@@ -77,19 +77,16 @@
         </div>
       </div>
     </nav>
-    <Notification></Notification>
   </div>
 </template>
 
 <script>
 import { CircleUserRound, Home, Info, Layers, Lock, LogOut, Settings, Shield, Star } from '@lucide/vue'
 import ThemeToggle from './ThemeToggle.vue'
-import Notification from './Notification.vue'
 
 export default {
   components: {
     ThemeToggle,
-    Notification,
     Home,
     Lock,
     Layers,
@@ -99,27 +96,6 @@ export default {
     Info,
     CircleUserRound,
     LogOut
-  },
-  created() {
-    console.log("Header mounted!")
-  },
-  mounted() {
-    const currentPath = globalThis.location.pathname.replace(/\/$/, '') || '/'
-    const links = document.querySelectorAll('.navbar-sunshine a[href]')
-
-    for (const link of links) {
-      const href = link.getAttribute('href')
-      if (!href || href === '#') {
-        continue
-      }
-
-      const linkPath = new URL(href, globalThis.location.href).pathname.replace(/\/$/, '') || '/'
-      if (linkPath !== currentPath) {
-        continue
-      }
-
-      link.classList.add('active')
-    }
   },
   methods: {
     logout() {

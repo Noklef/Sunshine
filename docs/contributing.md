@@ -12,12 +12,14 @@ Read our contribution guide in our organization level
 
 ### Web UI
 * The Web UI uses [Vite](https://vitejs.dev) as its build system.
-* The HTML pages used by the Web UI are found in `./src_assets/common/assets/web`.
-* [EJS](https://www.npmjs.com/package/vite-plugin-ejs) is used as a templating system for the pages
-  (check `template_header.html` and `template_header_main.html`).
+* The Web UI is a single-page application (SPA) built with [Vue.js](https://vuejs.org) and
+  [Vue Router](https://router.vuejs.org) (history mode). Its sources live in
+  `./src_assets/common/assets/web`: a single `index.html` shell plus `main.js` (the app entry),
+  `router.js` (route table), `App.vue` (layout), and one component per page under `views/`.
+* The C++ config server serves `index.html` as a fallback for any unmatched GET route, so
+  client-side routes (e.g. `/config`, `/apps`) work on deep links and reloads.
 * The Style System is provided by [Bootstrap](https://getbootstrap.com).
 * Icons are provided by [Lucide](https://lucide.dev) and [Simple Icons](https://simpleicons.org).
-* The JS framework used by the more interactive pages is [Vue.js](https://vuejs.org).
 
 #### Building
 

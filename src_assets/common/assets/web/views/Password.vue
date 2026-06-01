@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
-  <%- header %>
-</head>
-
-<body id="app" v-cloak>
-  <Navbar></Navbar>
+<template>
   <div class="container">
     <h1 class="my-4">{{ $t('password.password_change') }}</h1>
     <form @submit.prevent="save">
@@ -59,17 +51,14 @@
       </div>
     </form>
   </div>
-</body>
-<script type="module">
-  import { createApp } from 'vue'
-  import { initApp } from './init'
-  import Navbar from './Navbar.vue'
-  import { apiFetch } from './fetch_utils'
+</template>
+
+<script>
+  import { apiFetch } from '../fetch_utils'
   import { Save } from '@lucide/vue'
 
-  const app = createApp({
+  export default {
     components: {
-      Navbar,
       Save,
     },
     data() {
@@ -88,7 +77,7 @@
     methods: {
       save() {
         this.error = null;
-        apiFetch("./api/password", {
+        apiFetch("/api/password", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -112,7 +101,5 @@
         });
       },
     },
-  });
-
-  initApp(app);
+  }
 </script>

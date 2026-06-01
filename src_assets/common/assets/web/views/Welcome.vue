@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
-  <%- header %>
-</head>
-
-<body id="app" v-cloak>
-  <Notification></Notification>
+<template>
   <main role="main" style="max-width: 1200px; margin: 1em auto">
     <div class="d-flex gap-4">
       <div class="card p-2">
         <header>
           <h1 class="mb-0">
-            <img src="./images/logo-sunshine-45.png" height="45" alt="">
+            <img src="/images/logo-sunshine-45.png" height="45" alt="">
             {{ $t('welcome.greeting') }}
           </h1>
         </header>
@@ -50,19 +42,15 @@
       </div>
     </div>
   </main>
-</body>
+</template>
 
-<script type="module">
-  import { createApp } from "vue"
-  import ResourceCard from './ResourceCard.vue'
-  import { initApp } from './init'
-  import { apiFetch } from './fetch_utils'
-  import Notification from './Notification.vue'
+<script>
+  import ResourceCard from '../ResourceCard.vue'
+  import { apiFetch } from '../fetch_utils'
 
-  let app = createApp({
+  export default {
     components: {
       ResourceCard,
-      Notification,
     },
     data() {
       return {
@@ -80,7 +68,7 @@
       save() {
         this.error = null;
         this.loading = true;
-        apiFetch("./api/password", {
+        apiFetch("/api/password", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -105,7 +93,5 @@
         });
       },
     },
-  });
-
-  initApp(app);
+  }
 </script>

@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="auto">
-
-<head>
-      <%- header %>
-</head>
-
-<body id="app" v-cloak>
-  <Navbar></Navbar>
+<template>
   <div class="container">
     <div class="my-4">
       <h1>{{ $t('apps.applications_title') }}<span v-if="apps.length"> ({{ appCountLabel }})</span></h1>
@@ -551,14 +543,12 @@
       </div>
     </div>
   </div>
-</body>
-<script type="module">
-  import { createApp } from 'vue'
-  import { initApp } from './init'
-  import Navbar from './Navbar.vue'
-  import Checkbox from './Checkbox.vue'
-  import { apiFetch } from './fetch_utils'
-  import SunshineVersion from './sunshine_version'
+</template>
+
+<script>
+  import Checkbox from '../Checkbox.vue'
+  import { apiFetch } from '../fetch_utils'
+  import SunshineVersion from '../sunshine_version'
   import { Modal } from 'bootstrap/dist/js/bootstrap'
   import {
     ArrowDown,
@@ -584,9 +574,8 @@
     X,
   } from '@lucide/vue'
 
-  const app = createApp({
+  export default {
     components: {
-      Navbar,
       Checkbox,
       ArrowDown,
       ArrowRight,
@@ -706,7 +695,7 @@
     created() {
       this.loadApps();
 
-      fetch("./api/config")
+      fetch("/api/config")
         .then(r => r.json())
         .then(r => {
           this.platform = r.platform;
@@ -717,6 +706,21 @@
         .then((r) => r.json())
         .then((r) => this.githubVersion = new SunshineVersion(r, null))
         .catch((e) => console.error(e));
+    },
+    beforeUnmount() {
+      // Tear down any Bootstrap modal instances so a leftover backdrop/scroll-lock
+      // doesn't persist when navigating away from this route in the SPA.
+      [this.$refs.editModal, this.$refs.coverFinderModal, this.$refs.deleteModal, this.$refs.fileBrowserModal]
+        .forEach(el => {
+          if (el) {
+            const modal = Modal.getInstance(el);
+            if (modal) modal.dispose();
+          }
+        });
+      document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
     },
     methods: {
       newApp() {
@@ -770,14 +774,14 @@
         if (modal) modal.hide();
       },
       loadApps() {
-        return fetch("./api/apps")
+        return fetch("/api/apps")
           .then((r) => r.json())
           .then((r) => {
             this.apps = r.apps;
           });
       },
       confirmDelete() {
-        apiFetch("./api/apps/" + this.deleteTarget.index, {
+        apiFetch("/api/apps/" + this.deleteTarget.index, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json"
@@ -875,7 +879,7 @@
       },
       useCover(cover) {
         this.coverFinderBusy = true;
-        apiFetch("./api/covers/upload", {
+        apiFetch("/api/covers/upload", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -929,7 +933,7 @@
         this.fileBrowserError = '';
         const params = new URLSearchParams({ type: this.fileBrowserType });
         if (path) params.set('path', path);
-        fetch(`./api/browse?${params.toString()}`)
+        fetch(`/api/browse?${params.toString()}`)
           .then(r => r.ok ? r.json() : r.json().then(e => { throw new Error(e.error || 'Browse failed'); }))
           .then(data => {
             this.fileBrowserCurrentPath = data.path ?? '';
@@ -978,7 +982,7 @@
       },
       save() {
         this.editForm["image-path"] = this.editForm["image-path"].toString().replace(/"/g, '');
-        apiFetch("./api/apps", {
+        apiFetch("/api/apps", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -1035,8 +1039,5 @@
         Modal.getOrCreateInstance(modalEl).show();
       },
     },
-  });
-
-
-  initApp(app);
+  }
 </script>
